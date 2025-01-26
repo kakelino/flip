@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flipping pdf</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  
+ 
+  
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+    canvas {
+      border: 1px solid #000;
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: rgb(69, 188, 35);
+      color: white;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+  </style>
+  
+  
+</head>
+<body>
+
+  <h1>Flip me</h1>
+  <canvas id="pdfCanvas"></canvas>
+  <div>
+    <button id="prevPage" >Previous</button>
+    <button id="nextPage">Next</button>
+  </div>
+ <script>
+  
+const pdfUrl = "./exp2.pdf"; // Change this to the URL of your PDF
+const canvas = document.getElementById('pdfCanvas');
+const context = canvas.getContext('2d');
+
+let pdfDoc = null;
+let currentPage = 1;
+
+// Load PDF.js and fetch the PDF document
+pdfjsLib.getDocument(pdfUrl).promise.then((pdf) => {
+  pdfDoc = pdf;
+  renderPage(currentPage);
+});
+
+// Function to render a specific page
+function renderPage(pageNumber) {
+  pdfDoc.getPage(pageNumber).then((page) => {
+    const viewport = page.getViewport({ scale: 1.5 });
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    const renderContext = {
+      canvasContext: context,
+      viewport: viewport,
+    };
+
+    page.render(renderContext);
+  });
+}
+
+// Event listeners for flipping pages
+const prevButton = document.getElementById('prevPage');
+const nextButton = document.getElementById('nextPage');
+
+prevButton.addEventListener('click', () => {
+  if (currentPage > 1) {
+    currentPage--;
+    renderPage(currentPage);
+  }
+});
+
+nextButton.addEventListener('click', () => {
+  if (currentPage < pdfDoc.numPages) {
+    currentPage++;
+    renderPage(currentPage);
+  }
+});
+  var button1 = document.getElementById('prevPage');  
+  button1.style.width = '150px'; // Set width  
+  button1.style.height = '70px'; // Set height  
+  button1.style.fontSize = '28px'; // Set font size  
+  var button2 = document.getElementById('nextPage');  
+  button2.style.width = '150px'; // Set width  
+  button2.style.height = '70px'; // Set height  
+  button2.style.fontSize = '28px'; // Set font size  
+  </script>
+  
+  <script>
+  
+  </script>
+</body>
+</html>
